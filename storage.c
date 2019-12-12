@@ -58,7 +58,16 @@ static void initStorage(int x, int y) {
 //int x, int y : cell for password check
 //return : 0 - password is matching, -1 - password is not matching
 static int inputPasswd(int x, int y) {
-	
+	char msg[MAX_MSG_SIZE+1];
+
+	if(msg[MAX_MSG_SIZE+1]=deliverySystem[x][y].passwd)
+	{
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 
@@ -71,7 +80,20 @@ static int inputPasswd(int x, int y) {
 //char* filepath : filepath and name to write
 //return : 0 - backup was successfully done, -1 - failed to backup
 int str_backupSystem(char* filepath) {
+	int i,j,x,y;
 	
+		FILE *fp = fopen("filepath","wb");
+	fwrite(&deliverySystem, sizeof(storage_t**),0,fp);
+	fwrite(&deliverySystem, sizeof(storage_t**),1,fp);
+	
+	fclose(fp);	
+	
+	return 0; 
+	
+	if (fp==NULL)
+	{
+		return -1;
+	}
 }
 
 
@@ -93,7 +115,7 @@ int str_createSystem(char* filepath) {
 	}
 	
 	fscanf(fp,"%d %d", &systemSize[0], &systemSize[1]);//assign numbers in the setup file to systemSize
-	fscanf(fp, "%s",masterPassword);	//assign numbers in the setup file to masterpassword
+	fscanf(fp, "%s",masterPassword); //assign numbers in the setup file to masterpassword
 
 	deliverySystem = (storage_t**)malloc(systemSize[0]*sizeof(storage_t*));
 	for(i=0;i<systemSize[0];i++) 
@@ -101,12 +123,12 @@ int str_createSystem(char* filepath) {
 		deliverySystem[i]=(storage_t*)malloc(systemSize[1]*sizeof(storage_t));
 	}
 
-	for (i=0;i<systemSize[0];i++){
+	for (i=0;i<systemSize[0];i++)
+	{
 		for(j=0;j<systemSize[1];j++)
 			{
 			deliverySystem[i][j].cnt = 0;
-			deliverySystem[i][j].context = (char*)malloc(100*sizeof(char));
-			
+			deliverySystem[i][j].context = (char*)malloc(100*sizeof(char));		
 			}
 	}
 
@@ -175,31 +197,31 @@ int str_checkStorage(int x, int y) {
 	{
 		return -1;
 	}
-	else 
-	return 0;
+	
 	return deliverySystem[x][y].cnt;	
 }
 
 
-//put a package (msg) to the cell
 //input parameters
 //int x, int y : coordinate of the cell to put the package
 //int nBuilding, int nRoom : building and room numbers of the destination
 //char msg[] : package context (message string)
 //char passwd[] : password string (4 characters)
-//return : 0 - successfully put the package, -1 - failed to put
 int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_SIZE+1], char passwd[PASSWD_LEN+1]) {
 	
-	if (deliverySystem[x][y].cnt=0)
+	if (deliverySystem[x][y].cnt==0) // If the shipping container is empty
 	{
 		deliverySystem[x][y].building = nBuilding;
 		deliverySystem[x][y].room = nRoom;	
-		return 0;
+		deliverySystem[x][y].context = &msg[MAX_MSG_SIZE+1]; //put a package (msg) to the cell
+
+		return 0; //successfully put the package
 	}
 	else 
 	{
-		return -1;
+		return -1; //failed to put
 	}
+		deliverySystem[x][y].cnt++;
 }
 
 
@@ -218,6 +240,7 @@ int str_extractStorage(int x, int y) {
 //return : number of packages that the storage system has
 int str_findStorage(int nBuilding, int nRoom) {
 	int cnt;
+	
 	
 	return cnt;
 }

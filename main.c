@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
 		}
 	} while (cmd != 0);
 	
-	str_freeSystem();
+	str_freeSystem(); //동적 메모리 반납 
 	
 	return 0;
 }
