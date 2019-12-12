@@ -81,19 +81,50 @@ int str_backupSystem(char* filepath) {
 //return : 0 - successfully created, -1 - failed to create the system
 int str_createSystem(char* filepath) {
 
-	FILE *fp;
+
+	int i,j; //melloc
+	int x, y; //column & row
+	FILE *fp=NULL;
+	fp=fopen(filepath,"r");
 	
-	fp=fopen("storage.txt","r");
+	if (fp == NULL)
+	{
+		return -1;
+	}
+	
 	fscanf(fp,"%d %d", &systemSize[0], &systemSize[1]);//assign numbers in the setup file to systemSize
-	fscanf(fp, "%d",&masterPassword[PASSWD_LEN+1]);	//assign numbers in the setup file to masterpassword
-	fclose(fp);
+	fscanf(fp, "%s",masterPassword);	//assign numbers in the setup file to masterpassword
+
+	deliverySystem = (storage_t**)malloc(systemSize[0]*sizeof(storage_t*));
+	for(i=0;i<systemSize[0];i++) 
+	{
+		deliverySystem[i]=(storage_t*)malloc(systemSize[1]*sizeof(storage_t));
+	}
+
+	for (i=0;i<systemSize[0];i++){
+		for(j=0;j<systemSize[1];j++)
+			{
+			deliverySystem[i][j].cnt = 0;
+			deliverySystem[i][j].context = (char*)malloc(100*sizeof(char));
+			
+			}
+	}
+
+	while(fscanf(fp,"%d %d",&x,&y)==2)
+	{
+		fscanf(fp, "%d %d %s %s", &deliverySystem[x][y].building, &deliverySystem[x][y].room, deliverySystem[x][y].passwd, deliverySystem[x][y].context );			
+		deliverySystem[x][y].cnt ++;
+	}
 	
+
+	fclose(fp);	
 	return 0;
 }
 
 //free the memory of the deliverySystem 
 void str_freeSystem(void) {
 	
+	free(deliverySystem);
 }
 
 
@@ -144,7 +175,8 @@ int str_checkStorage(int x, int y) {
 	{
 		return -1;
 	}
-	
+	else 
+	return 0;
 	return deliverySystem[x][y].cnt;	
 }
 
@@ -158,6 +190,16 @@ int str_checkStorage(int x, int y) {
 //return : 0 - successfully put the package, -1 - failed to put
 int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_SIZE+1], char passwd[PASSWD_LEN+1]) {
 	
+	if (deliverySystem[x][y].cnt=0)
+	{
+		deliverySystem[x][y].building = nBuilding;
+		deliverySystem[x][y].room = nRoom;	
+		return 0;
+	}
+	else 
+	{
+		return -1;
+	}
 }
 
 
