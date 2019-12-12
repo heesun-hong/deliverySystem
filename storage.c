@@ -80,6 +80,14 @@ int str_backupSystem(char* filepath) {
 //char* filepath : filepath and name to read config parameters (row, column, master password, past contexts of the delivery system
 //return : 0 - successfully created, -1 - failed to create the system
 int str_createSystem(char* filepath) {
+
+	FILE *fp;
+	
+	fp=fopen("storage.txt","r");
+	fscanf(fp,"%d %d", &systemSize[0], &systemSize[1]);//assign numbers in the setup file to systemSize
+	fscanf(fp, "%d",&masterPassword[PASSWD_LEN+1]);	//assign numbers in the setup file to masterpassword
+	fclose(fp);
+	
 	return 0;
 }
 
@@ -93,6 +101,8 @@ void str_freeSystem(void) {
 //print the current state of the whole delivery system (which cells are occupied and the destination of the each occupied cells)
 void str_printStorageStatus(void) {
 	int i, j;
+
+	
 	printf("----------------------------- Delivery Storage System Status (%i occupied out of %i )-----------------------------\n\n", storedCnt, systemSize[0]*systemSize[1]);
 	
 	printf("\t");
