@@ -54,13 +54,12 @@ static void initStorage(int x, int y) {
 	
 }
 
-//get password input and check if it is correct for the cell (x,y)
 //int x, int y : cell for password check
 //return : 0 - password is matching, -1 - password is not matching
 static int inputPasswd(int x, int y) {
 	char msg[MAX_MSG_SIZE+1];
 
-	if(msg[MAX_MSG_SIZE+1]=deliverySystem[x][y].passwd)
+	if(msg[MAX_MSG_SIZE+1]=deliverySystem[x][y].passwd) //check the password input is correct for the cell(x,y)
 	{
 		return 0;
 	}
@@ -80,7 +79,6 @@ static int inputPasswd(int x, int y) {
 //char* filepath : filepath and name to write
 //return : 0 - backup was successfully done, -1 - failed to backup
 int str_backupSystem(char* filepath) {
-	int i,j,x,y;
 	
 		FILE *fp = fopen("filepath","wb");
 	fwrite(&deliverySystem, sizeof(storage_t**),0,fp);
